@@ -131,4 +131,4 @@ async def лучшая_пара(ctx):
     await ctx.send("Лучшая пара: <@{}> и <@{}> :cupid:".format(str(double[0]), str(double[1])))
 
 
-bot.run('NTcwNjY0MzY3OTQ3OTA3MDc4.XMChxw.gLll-JonRcOVY-T3AgpXBpDYIb4')
+bot.run('token')
