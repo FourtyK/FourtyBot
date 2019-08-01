@@ -1,7 +1,7 @@
-# FourtyBot Discord
-Мой бот для дискорда
+п»ї# FourtyBot Discord
+РњРѕР№ Р±РѕС‚ РґР»СЏ РґРёСЃРєРѕСЂРґР°
 
-## Запуск
+## Р—Р°РїСѓСЃРє
 ```
 pip install -r requirements.txt
-```
+``` 
