@@ -2,13 +2,13 @@ import discord
 from discord.ext import commands, tasks
 from discord import Status
 from itertools import cycle
-# import youtube_dl
 from embed import Embed_Class
 from fun import Fun_Class
 from adm import Adm_Class
-# from music import Music_Class
-# ИМПОРТ НУЖНЫХ БИБЛИОТЕК
 
+
+with open("token.txt", "r", encoding="utf-8") as ft:
+    TOKEN = ft.read()
 bot = commands.Bot(command_prefix='-')  # префикс бота
 bot.remove_command('help')
 
@@ -45,8 +45,7 @@ async def change_status():
 async def on_command_error(ctx, error):
         await ctx.send('Ошибка')
 
-# bot.add_cog(Music_Class(bot))
 bot.add_cog(Adm_Class(bot))
 bot.add_cog(Fun_Class(bot))
 bot.add_cog(Embed_Class(bot))
-bot.run('token')
+bot.run(TOKEN)

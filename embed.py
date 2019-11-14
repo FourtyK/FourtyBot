@@ -19,7 +19,6 @@ class Embed_Class(commands.Cog):
         embed.set_image(url="https://media.discordapp.net/attachments/605075208956805131/607346534601719819/maxresdefault.jpg?width=1195&height=673")
         embed.add_field(name="Развлечения", value="-fun", inline=False)
         embed.add_field(name="Управление юзерами", value="-adm", inline=False)
-        # embed.add_field(name="Музыка", value="-music", inline=False)
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -40,11 +39,3 @@ class Embed_Class(commands.Cog):
             embed.add_field(name="-clear", value="Очистит чат от 10 последних сообщений.", inline=False)
             embed.add_field(name="-mute/unmute [@User#1234]", value="Заблокировать/Разблокировать юзеру чат", inline=False)
             await ctx.send(embed=embed)
-
-    # @commands.command()
-    # async def music(self, ctx):
-    #         embed = discord.Embed(title='Музыка', color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
-    #         embed.add_field(name="-play [url_youtube_video]", value="Бот подключится к голосовому чату, где вы находитесь\n и начнёт проигрывать выбранное видео.", inline=False)
-    #         embed.add_field(name="-volume [1-100]", value="Изменяет громкость проигрывания видео.", inline=False)
-    #         embed.add_field(name="-leave", value="Бот выйдёт из голосового чата", inline=False)
-    #         await ctx.send(embed=embed)
