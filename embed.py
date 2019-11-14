@@ -10,9 +10,10 @@ class Embed_Class(commands.Cog):
     @commands.command(pass_context=True)
     async def help(self, ctx):
         embed = discord.Embed(title="Бот Фартука", description="Я - крутейший бот на свете, созданный людьми для дискорда. "
-                                                                  "Я владею множеством функций, а главное - я написан на языке программирования python. "
-                                                                  "Для того, чтобы найти мои исходники - обратитесь к моему создателю.\nНа любые неизвестные ему команды отвечает, что таких не видывал.\n "
-                                                                  "За помощью обращаться в личку [ВКонтакте](https://vk.com/idroasss)", color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
+                                                               "Я владею множеством функций, а главное - я написан на языке программирования python.\n"
+                                                               "Source: [GitHub](https://github.com/FourtyK/FourtyBot)\n"
+                                                               "Contacts: [VKontakte](https://vk.com/idroasss), [Telegram](https://t.me/fourtyk)", 
+                                                               color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
         embed.set_thumbnail(url="https://cdn.discordapp.com/avatars/570664367947907078/0a9ea2db037bad1191e16891ff869e0a.png?size=2048")
         embed.set_footer(text="Все права защищены Котолицией (с) 2019")
         embed.set_author(name="Author: FourtyK", icon_url="https://cdn.discordapp.com/avatars/295608939481923604/d23702f744c6a6355494709b318f4b9a.png?size=2048")
