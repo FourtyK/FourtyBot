@@ -37,6 +37,6 @@ class Embed_Class(commands.Cog):
             embed = discord.Embed(title='Админские команды', color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
             embed.add_field(name="-kick [@User#1234] reason", value="Кикнуть человека с сервера.", inline=False)
             embed.add_field(name="-ban [@User#1234] reason", value="Забанить человека на сервере.", inline=False)
-            embed.add_field(name="-clear", value="Очистит чат от 10 последних сообщений.", inline=False)
+            embed.add_field(name="-clear N", value="Очистит чат от N последних сообщений. (По умолчанию 10)", inline=False)
             embed.add_field(name="-mute/unmute [@User#1234]", value="Заблокировать/Разблокировать юзеру чат", inline=False)
             await ctx.send(embed=embed)
