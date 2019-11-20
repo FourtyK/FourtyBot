@@ -13,7 +13,7 @@ bot = commands.Bot(command_prefix='-')  # префикс бота
 bot.remove_command('help')
 
 @bot.event
-async def on_member_join(member):
+async def on_member_join(ctx, member):
     channels = member.guild.channels
     channel_id = ""
     for channel in channels:
@@ -48,4 +48,4 @@ async def on_command_error(ctx, error):
 bot.add_cog(Adm_Class(bot))
 bot.add_cog(Fun_Class(bot))
 bot.add_cog(Embed_Class(bot))
-bot.run(TOKEN)
+bot.run(TOKEN) # your token
