@@ -7,8 +7,6 @@ import asyncio
 
 
 def get_text():
-    phrase = []
-
     session = requests.session()
     req = session.get('https://randstuff.ru/saying/')
     doc = BeautifulSoup(req.content, features="html.parser")

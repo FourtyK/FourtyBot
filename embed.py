@@ -20,6 +20,7 @@ class Embed_Class(commands.Cog):
         embed.set_image(url="https://media.discordapp.net/attachments/605075208956805131/607346534601719819/maxresdefault.jpg?width=1195&height=673")
         embed.add_field(name="Развлечения", value="-fun", inline=False)
         embed.add_field(name="Управление юзерами", value="-adm", inline=False)
+        embed.add_field(name="Розыгрыши", value="-gws", inline=False)
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -34,9 +35,15 @@ class Embed_Class(commands.Cog):
 
     @commands.command()
     async def adm(self, ctx):
-            embed = discord.Embed(title='Админские команды', color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
-            embed.add_field(name="-kick [@User#1234] reason", value="Кикнуть человека с сервера.", inline=False)
-            embed.add_field(name="-ban [@User#1234] reason", value="Забанить человека на сервере.", inline=False)
-            embed.add_field(name="-clear N", value="Очистит чат от N последних сообщений. (По умолчанию 10)", inline=False)
-            embed.add_field(name="-mute/unmute [@User#1234]", value="Заблокировать/Разблокировать юзеру чат", inline=False)
-            await ctx.send(embed=embed)
+        embed = discord.Embed(title='Админские команды', color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
+        embed.add_field(name="-kick [@User#1234] reason", value="Кикнуть человека с сервера.", inline=False)
+        embed.add_field(name="-ban [@User#1234] reason", value="Забанить человека на сервере.", inline=False)
+        embed.add_field(name="-clear N", value="Очистит чат от N последних сообщений. (По умолчанию 10)", inline=False)
+        embed.add_field(name="-mute/unmute [@User#1234]", value="Заблокировать/Разблокировать юзеру чат", inline=False)
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def gws(self, ctx):
+        embed = discord.Embed(title="Розыгрыши", color=discord.Color(random.randint(0x000000, 0xFFFFFF)))
+        embed.add_field(name="-gwstart [Time] [Winners] [Prizes]", value="Начать розыгрыш.", inline=False)
+        await ctx.send(embed=embed)
