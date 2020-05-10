@@ -1,12 +1,15 @@
 import discord
 from discord.ext import commands
 import asyncio
+import datetime
+from funcs import uptime_com
 
 
 class Adm_Class(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.channels_names_list = ['инфо', 'новости', 'info', 'news', 'info-eng', 'info-ru']
+        self.start_time = datetime.datetime.utcnow()
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
@@ -60,3 +63,7 @@ class Adm_Class(commands.Cog):
                     if chan.name not in self.channels_names_list:
                         await chan.set_permissions(member, send_messages=True)
         await ctx.send(f"{member.name} был размучен!")
+
+    @commands.command()
+    async def uptime(self, ctx):
+        await ctx.send(uptime_com(self.start_time))
