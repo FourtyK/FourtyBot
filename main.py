@@ -1,32 +1,34 @@
+# импортирование библиотек
 import discord
 from discord.ext import commands, tasks
 from discord import Status
 from itertools import cycle
+
+# импортирование файлов
 from embed import Embed_Class
 from fun import Fun_Class
 from adm import Adm_Class
 from giveaway import Giveaway_Class
 from tokenfile import TOKEN
+from database import DataBase
 
 
 bot = commands.Bot(command_prefix='-')
 bot.remove_command('help')
 
 @bot.event
-async def on_member_join(ctx, member):
-    channels = member.guild.channels
-    channel_id = ""
-    for channel in channels:
-        if channel.name == "новенькие":
-            channel_id = channel.id
-    if channel_id:
-        channel = bot.get_channel(channel_id)
-        await channel.send("Приветствую тебя на сервере {}, {}.".format(member.guild.name, member.mention))
+async def on_member_join(member:discord.Member=None):
+    channel = bot.get_channel(638793865633202177)
+    await channel.send("Приветствую тебя на сервере {}, {}.".format(member.guild.name, member.mention))
     role = discord.utils.get(member.guild.roles, name='Member')
-    if role:
-        await member.add_roles(role)
+    await member.add_roles(role)
+    DataBase().add_user(member.id, member.discriminator, member.guild.id)
 
-statuses = cycle(["-help", "Owner's tag: #8072"])
+@bot.event
+async def on_member_remove(member:discord.Member=None):
+    DataBase().delete_user(member.id, member.guild.id)
+
+statuses = cycle(["-help", "Owner: FourtyK"])
 
 @bot.event
 async def on_ready():
