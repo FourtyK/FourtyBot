@@ -121,6 +121,10 @@ class Fun_Class(commands.Cog):
                         if random.randint(0,100) < 5:
                             await asyncio.sleep(3)
                             await ctx.send("Пистолет второго игрока дает осечку! Оба игрока живы, дуэль окончена.")
+                            if players[first_shot] == ctx.author.name:
+                                duel_result = '01'
+                            else:
+                                duel_result = '10'
                         elif random.randint(0,100) < 50:
                             await asyncio.sleep(3)
                             await ctx.send(f"Попадание! **{players[1 - first_shot]}** побеждает в дуэли!")

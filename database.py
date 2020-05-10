@@ -26,9 +26,10 @@ class DataBase:
     "ЗАПИСЬ ИНФОРМАЦИИ В БАЗУ ДАННЫХ"
     def insert_duel_info(self, plr1, plr2, duel_result):
         if duel_result == '00':
-            list_to_add = [plr1, plr2]
             self.cur.execute("""UPDATE duels SET draws = draws + 1
-            WHERE user_id = ? AND user_id = ?""", list_to_add)
+            WHERE user_id = ?""", [plr1])
+            self.cur.execute("""UPDATE duels SET draws = draws + 1
+            WHERE user_id = ?""", [plr2])
             self.con.commit()
 
         elif duel_result == '01':
