@@ -10,6 +10,7 @@ from fun import Fun_Class
 from adm import Adm_Class
 from giveaway import Giveaway_Class
 from tokenfile import TOKEN
+from database import DataBase
 
 
 bot = commands.Bot(command_prefix='-')
@@ -17,19 +18,13 @@ bot.remove_command('help')
 
 @bot.event
 async def on_member_join(ctx, member):
-    channels = member.guild.channels
-    channel_id = ""
-    for channel in channels:
-        if channel.name == "новенькие":
-            channel_id = channel.id
-    if channel_id:
-        channel = bot.get_channel(channel_id)
-        await channel.send("Приветствую тебя на сервере {}, {}.".format(member.guild.name, member.mention))
+    channel = bot.get_channel(638793865633202177)
+    await channel.send("Приветствую тебя на сервере {}, {}.".format(member.guild.name, member.mention))
     role = discord.utils.get(member.guild.roles, name='Member')
-    if role:
-        await member.add_roles(role)
+    await member.add_roles(role)
+    DataBase().add_user(member.id, member.discriminator, member.guild.id)
 
-statuses = cycle(["-help", "Owner's tag: #8072"])
+statuses = cycle(["-help", "Owner: FourtyK"])
 
 @bot.event
 async def on_ready():
