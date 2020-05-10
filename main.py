@@ -17,16 +17,23 @@ bot = commands.Bot(command_prefix='-')
 bot.remove_command('help')
 
 @bot.event
+<<<<<<< HEAD
 async def on_member_join(member:discord.Member=None):
+=======
+async def on_member_join(ctx, member):
+>>>>>>> f21be032b4cb54c28aa43d43bbf43dda03ffee4f
     channel = bot.get_channel(638793865633202177)
     await channel.send("Приветствую тебя на сервере {}, {}.".format(member.guild.name, member.mention))
     role = discord.utils.get(member.guild.roles, name='Member')
     await member.add_roles(role)
     DataBase().add_user(member.id, member.discriminator, member.guild.id)
+<<<<<<< HEAD
 
 @bot.event
 async def on_member_remove(member:discord.Member=None):
     DataBase().delete_user(member.id, member.guild.id)
+=======
+>>>>>>> f21be032b4cb54c28aa43d43bbf43dda03ffee4f
 
 statuses = cycle(["-help", "Owner: FourtyK"])
 
