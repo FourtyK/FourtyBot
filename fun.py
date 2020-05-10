@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import random
 import asyncio
 
+from database import DataBase
 
 def get_text():
     session = requests.session()
@@ -32,13 +33,13 @@ class Fun_Class(commands.Cog):
 
     @commands.command()
     async def avatar(self, ctx, member):
-        id = member[2:-1]
+        id = member[3:-1]
         guild = ctx.guild
         for member in guild.members:
             if str(member.id) == str(id):
                 embed = discord.Embed(color=0xeee657)
                 image_url = member.avatar_url._url
-                embed.set_image(url=image_url)
+                embed.set_image(url="https://cdn.discordapp.com" + image_url)
                 await ctx.send(embed=embed)
 
     @commands.command()
@@ -50,19 +51,17 @@ class Fun_Class(commands.Cog):
         }
         await ctx.send('Иииии... Это...')
         await asyncio.sleep(3)
-        chance = random.randint(0,  100)
+        chance = random.randint(0, 100)
+        embed = discord.Embed(color=0xeee657)
         if chance <= 5:
-            embed = discord.Embed(color=0xeee657)
             embed.set_image(url=money.pop('edge'))
             await ctx.send(embed=embed)
         else:
             chance = random.randint(1, 2)
             if chance == 1:
-                embed = discord.Embed(color=0xeee657)
                 embed.set_image(url=money.pop('tails'))
                 await ctx.send(embed=embed)
             else:
-                embed = discord.Embed(color=0xeee657)
                 embed.set_image(url=money.pop('eagle'))
                 await ctx.send(embed=embed)
 
@@ -83,3 +82,60 @@ class Fun_Class(commands.Cog):
         double.append(second)
 
         await ctx.send("Лучшая пара: <@{}> и <@{}> :cupid:".format(str(double[0]), str(double[1])))
+
+    @commands.command()
+    async def duel(self, ctx, member:discord.Member=None):
+        if ctx.author.id == member.id:
+            await ctx.send("Вы не можете бросить самому себе дуэль! :clown:")
+        else:
+            self.answer = False
+            players = [ctx.author.name, member.name]
+
+            await ctx.send(f"**{member.name}** имеет 7 секунд для ответа.")
+            await asyncio.sleep(7)
+
+            if self.answer:
+                await ctx.send(f"Дуэль между **{ctx.author.name}** и **{member.name}** начата!")
+            else:
+                await ctx.send(f"**{member.name}** испугался и не принял дуэль в отведённое время! 🐓")
+
+            if self.answer:
+                first_shot = random.choice([0, 1])
+                await ctx.send(f"Первым стрелять будет **{players[first_shot]}**")
+                if random.randint(0,100) < 5:
+                    await asyncio.sleep(3)
+                    await ctx.send(f"""Вот это невезение! Пистолет **{players[first_shot]}** дал осечку!
+    Теперь очередь **{players[1 - first_shot]}** делать выстрел.""")
+                    await asyncio.sleep(3)
+                else:
+                    if random.randint(0,100) < 50:
+                        await asyncio.sleep(3)
+                        await ctx.send(f"Попадание! **{players[first_shot]}** побеждает в дуэли!")
+                        if players[first_shot] == ctx.author.name:
+                            duel_result = '10'
+                        else:
+                            duel_result = '01'
+                    else:
+                        await asyncio.sleep(3)
+                        await ctx.send(f"**{players[first_shot]}** стреляет, но не попадает! Теперь очередь **{players[1 - first_shot]}**")
+                        if random.randint(0,100) < 5:
+                            await asyncio.sleep(3)
+                            await ctx.send("Пистолет второго игрока дает осечку! Оба игрока живы, дуэль окончена.")
+                        elif random.randint(0,100) < 50:
+                            await asyncio.sleep(3)
+                            await ctx.send(f"Попадание! **{players[1 - first_shot]}** побеждает в дуэли!")
+                            if players[first_shot] == ctx.author.name:
+                                duel_result = '01'
+                            else:
+                                duel_result = '10'
+                        else:
+                            await asyncio.sleep(3)
+                            await ctx.send(f"**{players[1 - first_shot]}** промахивается!")
+                            await ctx.send("Оба игрока промахнулись, дуэль окончена вничью!")
+                            duel_result = '00'
+                DataBase().insert_duel_info(ctx.author.id, member.id, duel_result)
+
+    @commands.command()
+    async def accept(self, ctx):
+        self.answer = True
+        await ctx.send(f"**{ctx.author.name}** принял приглашение на дуэль!")

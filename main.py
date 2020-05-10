@@ -1,7 +1,10 @@
+# импортирование библиотек
 import discord
 from discord.ext import commands, tasks
 from discord import Status
 from itertools import cycle
+
+# импортирование файлов
 from embed import Embed_Class
 from fun import Fun_Class
 from adm import Adm_Class
