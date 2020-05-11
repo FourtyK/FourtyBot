@@ -22,33 +22,29 @@ class DataBase:
     def delete_user(self, user_id, guild_id):
         self.cur.execute("DELETE FROM users WHERE user_id LIKE ? AND guild_id = ?", [user_id, guild_id])
         self.con.commit()
+    
 
-    "ЗАПИСЬ ИНФОРМАЦИИ В БАЗУ ДАННЫХ"
-    def insert_duel_info(self, plr1, plr2, duel_result):
-        if duel_result == '00':
-            self.cur.execute("""UPDATE duels SET draws = draws + 1
-            WHERE user_id = ?""", [plr1])
-            self.cur.execute("""UPDATE duels SET draws = draws + 1
-            WHERE user_id = ?""", [plr2])
-            self.con.commit()
+    def record_match(self, winner, loser):
+        self._change_duel_info_variable(winner, 'wins')
+        self._change_duel_info_variable(loser, 'loses')
+        self._commit_changes()
 
-        elif duel_result == '01':
-            self.cur.execute("""UPDATE duels SET wins = wins + 1
-            WHERE user_id = ?""", [plr2])
+    
+    def record_draw_match(self, player1, player2):
+        self._change_duel_info_variable(player1, 'draws')
+        self._change_duel_info_variable(player2, 'draws')
+        self._commit_changes()
 
-            self.cur.execute("""UPDATE duels SET loses = loses + 1
-            WHERE user_id = ?""", [plr1])
-            self.con.commit()
-
-        elif duel_result == '10':
-            self.cur.execute("""UPDATE duels SET wins = wins + 1
-            WHERE user_id = ?""", [plr1])
-
-            self.cur.execute("""UPDATE duels SET loses = loses + 1
-            WHERE user_id = ?""", [plr2])
-            self.con.commit()
 
     "ПОЛУЧЕНИЕ СТАТИСТИКИ ИГРОКА ИЗ БАЗЫ ДАННЫХ"
     def get_duel_info(self, user_id):
-        res = (self.cur.execute("SELECT * FROM duels WHERE user_id LIKE ?", [user_id])).fetchall()[0][1:6]
-        return res
+        return (self.cur.execute("SELECT * FROM duels WHERE user_id LIKE ?", [user_id])).fetchall()[0][1:6]
+
+
+    def _change_duel_info_variable(self, user_id : int, variable : str, delta : int = 1):
+        self.cur.execute(f"""UPDATE duels SET {variable} = {variable} + {delta}
+        WHERE user_id = ?""", [user_id])
+
+
+    def _commit_changes(self):
+        self.con.commit()
