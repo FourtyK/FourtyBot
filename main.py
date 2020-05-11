@@ -47,7 +47,7 @@ async def on_command_error(ctx, error):
     elif "is not found" in error.args[0]:
         await ctx.send("Неизвестная команда")
     else:
-        await ctx.send("Error")
+        print(error)
 
 
 bot.add_cog(Giveaway_Class(bot))
