@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 import random
 import asyncio
+from typing import List
 
 from database import DataBase
 
@@ -87,57 +88,81 @@ class Fun_Class(commands.Cog):
     async def duel(self, ctx, member:discord.Member=None):
         if ctx.author.id == member.id:
             await ctx.send("Вы не можете бросить самому себе дуэль! :clown:")
+            return
+    
+        self.answer = False
+
+        ids = [ctx.author.id, member.id]
+        players : List[str] = [ctx.author.name, member.name]
+
+        await ctx.send(f"**{member.name}** имеет 7 секунд для ответа.")
+
+        for _ in range(0, 8):
+            await asyncio.sleep(1)
+            if self.answer:
+                break
+
+        if not self.answer:
+            await ctx.send(f"**{member.name}** испугался и не принял дуэль в отведённое время! 🐓")
+            return 
+            
+        await ctx.send(f"Дуэль между **{ctx.author.name}** и **{member.name}** начата!")
+        is_draw, winner = await self.duel_routine(ctx, players)
+        winner_index = players.index(winner)
+        if is_draw:
+            DataBase().record_draw_match(ids[winner_index], ids[1 - winner_index])
         else:
-            self.answer = False
-            players = [ctx.author.name, member.name]
+            DataBase().record_match(ids[winner_index], ids[1 - winner_index])
+        
 
-            await ctx.send(f"**{member.name}** имеет 7 секунд для ответа.")
-            await asyncio.sleep(7)
+    async def duel_routine(self, ctx, players : List[int]) -> (bool, int):
 
-            if self.answer:
-                await ctx.send(f"Дуэль между **{ctx.author.name}** и **{member.name}** начата!")
-            else:
-                await ctx.send(f"**{member.name}** испугался и не принял дуэль в отведённое время! 🐓")
+        def roll_for_weapon_jam(chance = 5) -> bool:
+            return random.randint(0, 100) < chance
 
-            if self.answer:
-                first_shot = random.choice([0, 1])
-                await ctx.send(f"Первым стрелять будет **{players[first_shot]}**")
-                if random.randint(0,100) < 5:
-                    await asyncio.sleep(3)
-                    await ctx.send(f"""Вот это невезение! Пистолет **{players[first_shot]}** дал осечку!
-    Теперь очередь **{players[1 - first_shot]}** делать выстрел.""")
-                    await asyncio.sleep(3)
-                else:
-                    if random.randint(0,100) < 50:
-                        await asyncio.sleep(3)
-                        await ctx.send(f"Попадание! **{players[first_shot]}** побеждает в дуэли!")
-                        if players[first_shot] == ctx.author.name:
-                            duel_result = '10'
-                        else:
-                            duel_result = '01'
-                    else:
-                        await asyncio.sleep(3)
-                        await ctx.send(f"**{players[first_shot]}** стреляет, но не попадает! Теперь очередь **{players[1 - first_shot]}**")
-                        if random.randint(0,100) < 5:
-                            await asyncio.sleep(3)
-                            await ctx.send("Пистолет второго игрока дает осечку! Оба игрока живы, дуэль окончена.")
-                            if players[first_shot] == ctx.author.name:
-                                duel_result = '01'
-                            else:
-                                duel_result = '10'
-                        elif random.randint(0,100) < 50:
-                            await asyncio.sleep(3)
-                            await ctx.send(f"Попадание! **{players[1 - first_shot]}** побеждает в дуэли!")
-                            if players[first_shot] == ctx.author.name:
-                                duel_result = '01'
-                            else:
-                                duel_result = '10'
-                        else:
-                            await asyncio.sleep(3)
-                            await ctx.send(f"**{players[1 - first_shot]}** промахивается!")
-                            await ctx.send("Оба игрока промахнулись, дуэль окончена вничью!")
-                            duel_result = '00'
-                DataBase().insert_duel_info(ctx.author.id, member.id, duel_result)
+
+        def roll_for_accuracy(chance = 50) -> bool:
+            return random.randint(0, 100) < chance
+
+
+        def choose_next_player_index(shooter_index : int) -> int:
+            return (shooter_index + 1) % 2
+
+
+        shooter_index = random.choice([0, 1])
+
+        await ctx.send(f"Первым стрелять будет **{players[shooter_index]}**")
+
+        await asyncio.sleep(3)
+
+        # First round
+
+        if (roll_for_weapon_jam()):
+            await ctx.send(f"Вот это невезение! Пистолет **{players[shooter_index]}** дал осечку!\nТеперь очередь **{players[1 - shooter_index]}** делать выстрел.")
+        elif (roll_for_accuracy()):
+            await ctx.send(f"Попадание! **{players[shooter_index]}** побеждает в дуэли!")
+            return False, players[shooter_index]
+        else:
+            await ctx.send(f"**{players[shooter_index]}** стреляет, но не попадает! Теперь очередь **{players[1 - shooter_index]}**")
+        
+
+        await asyncio.sleep(3)
+
+        # Second round
+
+        shooter_index = choose_next_player_index(shooter_index)
+
+        if (roll_for_weapon_jam()):
+            await ctx.send("Пистолет второго игрока дает осечку! Оба игрока живы, дуэль окончена.")
+            return True, players[shooter_index]
+        elif (roll_for_accuracy()):
+            await ctx.send(f"Попадание! **{players[shooter_index]}** побеждает в дуэли!")
+            return False, players[shooter_index]
+        else: 
+            await ctx.send(f"**{players[shooter_index]}** промахивается!")
+            await ctx.send("Оба игрока промахнулись, дуэль окончена вничью!")
+            return True, players[shooter_index]
+
 
     @commands.command()
     async def accept(self, ctx):
